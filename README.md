@@ -1,0 +1,2 @@
+# farkle
+simple farkle game
