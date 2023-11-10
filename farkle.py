@@ -64,11 +64,12 @@ def calculate_score(dice):
         print("No scoring dice, Farkle!")
         return roll_score, dice_banked
     
-    print("Scores: ")
+    print("------Scores------")
     for score in possible_scores:
-        print(score.name, " - ", score.points)
+        print("|", score.name, "-", score.points)
         roll_score += score.points
         dice_banked += score.dice_banked
+    print("------------------")
     
     return roll_score, dice_banked
 
@@ -110,14 +111,17 @@ def check_for_scores(Roll):
         # Check for 6 of a kind
         elif dice.count(i) == 6:
             possible_scores.append(Score("Six-of-a-Kind", 3000, 6))
+            return possible_scores
 
     # Check for 1-6 straight
     if sorted(dice) == [1, 2, 3, 4, 5, 6]:
         possible_scores.append(Score("Straight", 1500, 6))
+        return possible_scores
 
     # Check for 3 pairs
     if pairs == 3:
         possible_scores.append(Score("Three Pairs", 1500, 6))
+        return possible_scores
 
     # Check for 4 of a kind plus a pair
     if four_of_a_kinds == 1 and pairs == 1:
@@ -167,7 +171,8 @@ def player_turn(player):
         roll = Roll(remaining_dice)
         roll.roll_all()
         dice = [die.value for die in roll.dice]
-        print(f"Roll {roll_number}: {player.name} rolled:", dice)        
+        print(f"Roll {roll_number}: {player.name} rolled:", sorted(dice))     
+        print()   
         score, dice_banked = calculate_score(roll)
         if score == 0 and dice_banked == 0:
             return 0
@@ -177,7 +182,7 @@ def player_turn(player):
         if remaining_dice == 0 and turn_score != 0:
             remaining_dice = 6
 
-        print(f"Turn score: {turn_score} | Remaining dice: {remaining_dice}")
+        print(f"Turn score: {turn_score} | Remaining dice: {remaining_dice}\n")
         roll_again = ""
         while True:
             roll_again = input("Roll again? (y/n): ")
@@ -203,8 +208,10 @@ def play_game():
     player_names = [player.name for player in players]
     res = str(player_names)[1:-1]
     print("Players: " + res)
+    round = 1
 
     while max(player_scores) < WINNING_SCORE:
+        print(f"\n {current_player.name} || Round {round} ||")
         turn_score = player_turn(current_player)
 
         if turn_score > 0:
@@ -235,11 +242,12 @@ def play_game():
         current_player = players[(players.index(current_player) + 1) % len(players)]
         if current_player == players[0]:
             print("\n----------------------------------------")
-            print("| Next round |")
+            print("|| Current Scores ||\n")
             sorted_players = sorted(players, key=lambda x: x.score, reverse=True)
             for player in sorted_players:
                 print(f"{player.name}: {player.score}")
             print("----------------------------------------\n")
+            round += 1
             
         
 
