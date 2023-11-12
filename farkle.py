@@ -1,4 +1,3 @@
-from collections import Counter
 import random
 import os
 
@@ -134,12 +133,32 @@ def check_for_scores(Roll):
     # Check for ones scores
     if 1 in dice and triplets != 2 and pairs != 3:
         if dice.count(1) < 3:
-            possible_scores.append(Score("Ones", 100 * dice.count(1), dice.count(1)))
+            ones_banked = 0
+            if dice.count(1) > 1 and len(possible_scores) == 0:
+                try:
+                    ones_banked = int(input(f"How many ones would you like to bank?  0-{dice.count(1)}: "))
+                except ValueError:
+                    print("Error: Invalid input")
+            if dice.count(1) == 1:
+                ones_banked = 1
+            if ones_banked and 0 < ones_banked <= dice.count(1):
+                possible_scores.append(Score("Ones", ones_banked * 100, ones_banked))
+                
 
     # Check for fives scores
     if 5 in dice and triplets != 2 and pairs != 3:
         if dice.count(5) < 3:
-            possible_scores.append(Score("Fives", 50 * dice.count(5), dice.count(5)))
+            fives_banked = 0
+            if len(possible_scores) > 0 or dice.count(5) > 1:
+                try:
+                    fives_banked = int(input(f"How many fives would you like to bank?  0-{dice.count(5)}: "))
+                except ValueError:
+                    print("Error: Invalid input")
+            elif dice.count(5) == 1 and len(possible_scores) == 0:
+                fives_banked = 1
+
+            if fives_banked and 0 < fives_banked <= dice.count(5):
+                possible_scores.append(Score("Fives", 50 * fives_banked, fives_banked))
             
     return possible_scores
 
@@ -185,6 +204,8 @@ def player_turn(player):
         print(f"Turn score: {turn_score} | Remaining dice: {remaining_dice}\n")
         roll_again = ""
         while True:
+            if remaining_dice < 3 and player.score == 0:
+                print("Remember you need 500 points to get on the board.")
             roll_again = input("Roll again? (y/n): ")
             if roll_again.lower() != "y" and roll_again.lower() != "n":
                 print("Invalid input. Please enter 'y' or 'n'.")
