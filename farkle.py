@@ -5,18 +5,20 @@ WINNING_SCORE = 10000
 number_of_players = 0
 players = []
 
+
 class Player:
     def __init__(self, name):
         self.name = name
         self.score = 0
         self.farkles_in_a_row = 0
 
+
 class Score:
     def __init__(self, name, points, dice_banked):
         self.name = name
         self.points = points
         self.dice_banked = dice_banked
-           
+
 
 class Die:
     def __init__(self):
@@ -33,18 +35,17 @@ class Roll:
             self.dice = [Die() for _ in range(number_of_dice)]
         else:
             raise ValueError("Number of dice must be between 1 and 6")
-        
-        
+
     def dice(self):
         return [die.value for die in self.dice]
-    
+
     def roll_all(self):
         for die in self.dice:
             die.roll()
-        
+
 
 def cls():
-    os.system('cls' if os.name=='nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 def calculate_remaining_dice(dice, scores):
@@ -58,24 +59,24 @@ def calculate_score(dice):
     dice_banked = 0
     possible_scores = check_for_scores(dice)
     possible_scores.sort(key=lambda x: x.points, reverse=True)
-    
+
     if len(possible_scores) == 0:
         print("No scoring dice, Farkle!")
         return roll_score, dice_banked
-    
+
     print("------Scores------")
     for score in possible_scores:
         print("|", score.name, "-", score.points)
         roll_score += score.points
         dice_banked += score.dice_banked
     print("------------------")
-    
+
     return roll_score, dice_banked
 
 
 def check_for_scores(Roll):
     # create score objects
-    
+
     three_of_a_kind = Score("Three-of-a-Kind", 100, 3)
     four_of_a_kind = Score("Four-of-a-Kind", 1000, 4)
 
@@ -84,8 +85,8 @@ def check_for_scores(Roll):
     pairs = 0
     triplets = 0
     four_of_a_kinds = 0
-    
-    for i in range(1,7):
+
+    for i in range(1, 7):
         # Check for pairs
         if dice.count(i) == 2 and i != 1:
             pairs += 1
@@ -136,14 +137,17 @@ def check_for_scores(Roll):
             ones_banked = 0
             if dice.count(1) > 1 and len(possible_scores) == 0:
                 try:
-                    ones_banked = int(input(f"How many ones would you like to bank?  0-{dice.count(1)}: "))
+                    ones_banked = int(
+                        input(
+                            f"How many ones would you like to bank?  0-{dice.count(1)}: "
+                        )
+                    )
                 except ValueError:
                     print("Error: Invalid input")
             if dice.count(1) == 1:
                 ones_banked = 1
             if ones_banked and 0 < ones_banked <= dice.count(1):
                 possible_scores.append(Score("Ones", ones_banked * 100, ones_banked))
-                
 
     # Check for fives scores
     if 5 in dice and triplets != 2 and pairs != 3:
@@ -151,7 +155,11 @@ def check_for_scores(Roll):
             fives_banked = 0
             if len(possible_scores) > 0 or dice.count(5) > 1:
                 try:
-                    fives_banked = int(input(f"How many fives would you like to bank?  0-{dice.count(5)}: "))
+                    fives_banked = int(
+                        input(
+                            f"How many fives would you like to bank?  0-{dice.count(5)}: "
+                        )
+                    )
                 except ValueError:
                     print("Error: Invalid input")
             elif dice.count(5) == 1 and len(possible_scores) == 0:
@@ -159,7 +167,7 @@ def check_for_scores(Roll):
 
             if fives_banked and 0 < fives_banked <= dice.count(5):
                 possible_scores.append(Score("Fives", 50 * fives_banked, fives_banked))
-            
+
     return possible_scores
 
 
@@ -169,7 +177,7 @@ def initialize_game():
     if number_of_players < 2:
         print("Error: Minimum number of players is 2")
         exit()
-        
+
     for player in range(number_of_players):
         player_name = get_player_names(player)
         players.append(Player(player_name))
@@ -177,7 +185,6 @@ def initialize_game():
 
 def get_player_names(player_number):
     return input(f"Enter player {player_number + 1}'s name: ").title()
-
 
 
 def player_turn(player):
@@ -190,8 +197,8 @@ def player_turn(player):
         roll = Roll(remaining_dice)
         roll.roll_all()
         dice = [die.value for die in roll.dice]
-        print(f"Roll {roll_number}: {player.name} rolled:", sorted(dice))     
-        print()   
+        print(f"Roll {roll_number}: {player.name} rolled:", sorted(dice))
+        print()
         score, dice_banked = calculate_score(roll)
         if score == 0 and dice_banked == 0:
             return 0
@@ -212,13 +219,13 @@ def player_turn(player):
             else:
                 break
         if roll_again.lower() == "n":
-                print()
-                break
+            print()
+            break
         elif roll_again.lower() == "y":
             roll_number += 1
             print()
             continue
-        
+
     return turn_score
 
 
@@ -259,7 +266,7 @@ def play_game():
         if len(players) == 1:
             print(f"{players[0].name} wins!")
             break
-        
+
         current_player = players[(players.index(current_player) + 1) % len(players)]
         if current_player == players[0]:
             print("\n----------------------------------------")
@@ -269,8 +276,6 @@ def play_game():
                 print(f"{player.name}: {player.score}")
             print("----------------------------------------\n")
             round += 1
-            
-        
 
 
-play_game()    
+play_game()
