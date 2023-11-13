@@ -204,7 +204,7 @@ def player_turn(player):
         print(f"Turn score: {turn_score} | Remaining dice: {remaining_dice}\n")
         roll_again = ""
         while True:
-            if remaining_dice < 3 and player.score == 0:
+            if remaining_dice < 6 and player.score == 0:
                 print("Remember you need 500 points to get on the board.")
             roll_again = input("Roll again? (y/n): ")
             if roll_again.lower() != "y" and roll_again.lower() != "n":
