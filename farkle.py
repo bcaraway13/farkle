@@ -1,5 +1,4 @@
 import random
-import os
 
 WINNING_SCORE = 10000
 number_of_players = 0
@@ -44,16 +43,6 @@ class Roll:
             die.roll()
 
 
-def cls():
-    os.system("cls" if os.name == "nt" else "clear")
-
-
-def calculate_remaining_dice(dice, scores):
-    remaining_dice = len(dice)
-    ...
-    return remaining_dice
-
-
 def calculate_score(dice):
     roll_score = 0
     dice_banked = 0
@@ -75,11 +64,6 @@ def calculate_score(dice):
 
 
 def check_for_scores(Roll):
-    # create score objects
-
-    three_of_a_kind = Score("Three-of-a-Kind", 100, 3)
-    four_of_a_kind = Score("Four-of-a-Kind", 1000, 4)
-
     dice = [die.value for die in Roll.dice]
     possible_scores = []
     pairs = 0
